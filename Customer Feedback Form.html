@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Feedback Form</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main>
+      <div class="card">
+        <h3>Give feedback</h3>
+        <form action="#">
+          <div class="form-group">
+            <label for="feedback">Tell us more about your thoughts of the bookstore and what we could do to better your experience!</label>
+            <div>
+              <label>
+                <input type="radio" name="rating" />
+                <span>Terrible</span>
+                <img src="./photos/icons/terrible.JPG" alt="Terrible" style="width: 50px; height: 50px;" />
+              </label>
+              <label>
+                <input type="radio" name="rating" />
+                <span>Bad</span>
+                <img src="./photos/icons/bad.jpg" alt="Bad" style="width: 50px; height: 50px;" />
+              </label>
+              <label>
+                <input type="radio" name="rating" />
+                <span>Okay</span>
+                <img src="./photos/icons/okay.jpg" alt="Okay" style="width: 50px; height: 50px;" />
+              </label>
+              <!-- Add more rating options if needed -->
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="comments">Comments:</label>
+            <textarea id="comments" name="comments" rows="4" cols="50"></textarea>
+          </div>
+          <button type="submit">Submit</button>
+        </form>
+      </div>
+      <div id="book-images"></div>
+      <div id="error-message" style="color: red;"></div>
+    </main>
+    <script src="scripts.js"></script>
+    <script>
+        fetch('https://bookstore-api-vj13.onrender.com/inventory')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                const bookImagesDiv = document.getElementById('book-images');
+                data.forEach(book => {
+                    const img = document.createElement('img');
+                    img.src = book.imageUrl;
+                    img.alt = book.title;
+                    img.style.width = '100px';
+                    img.style.height = '150px';
+                    bookImagesDiv.appendChild(img);
+                });
+            })
+            .catch(error => {
+                console.error('Error fetching inventory:', error);
+                document.getElementById('error-message').textContent = 'Error fetching inventory. Please try again later.';
+            });
+    </script>
+  </body>
+</html>

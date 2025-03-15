@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search - Bookstore</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>Search Books</h1>
+        <nav>
+            <ul>
+                <li><a href="home.html">Home</a></li>
+                <li><a href="books.html">Books</a></li>
+                <li><a href="add-book.html">Add Book</a></li>
+                <li><a href="search.html">Search</a></li>
+                <li><a href="#" id="logout">Logout</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <section id="search">
+            <h2>Search Books</h2>
+            <input type="text" id="search-input" placeholder="Search by title, author, or genre">
+            <button id="search-button">Enter</button>
+            <div id="search-results"></div>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2023 Bookstore. All rights reserved.</p>
+    </footer>
+    <script src="scripts.js"></script>
+    <script>
+        document.getElementById('logout').addEventListener('click', function() {
+            sessionStorage.removeItem('role');
+            window.location.href = 'login.html';
+        });
+
+        document.addEventListener('booksDataLoaded', function(event) {
+            const books = event.detail;
+            const searchInput = document.getElementById('search-input');
+            const searchButton = document.getElementById('search-button');
+            const searchResults = document.getElementById('search-results');
+
+            const performSearch = () => {
+                const query = searchInput.value.toLowerCase();
+                searchResults.innerHTML = '';
+
+                const filteredBooks = books.filter(book => 
+                    book.title.toLowerCase().includes(query) ||
+                    book.author.toLowerCase().includes(query) ||
+                    book.genre.toLowerCase().includes(query)
+                );
+
+                filteredBooks.forEach(book => {
+                    const bookItem = document.createElement('div');
+                    bookItem.classList.add('book-item');
+                    bookItem.innerHTML = `
+                        <p><strong>Title:</strong> ${book.title}</p>
+                        <p><strong>Author:</strong> ${book.author}</p>
+                        <p><strong>Genre:</strong> ${book.genre}</p>
+                        <img src="${book.cover}" alt="${book.title} Cover">
+                        <button onclick="alert('Author: ${book.author}')">Show Author</button>
+                        <button onclick="addBookToServer('${book.title}', '${book.author}', '${book.genre}', '${book.cover}')">Add to Catalog</button>
+                    `;
+                    searchResults.appendChild(bookItem);
+                });
+            };
+
+            searchButton.addEventListener('click', performSearch);
+            searchInput.addEventListener('keypress', function(event) {
+                if (event.key === 'Enter') {
+                    performSearch();
+                }
+            });
+        });
+
+        function addBookToServer(title, author, genre, cover) {
+            fetch('http://localhost:3000/add-book', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ title, author, genre, cover })
+            })
+            .then(response => response.text())
+            .then(data => {
+                alert(data);
+                window.location.href = 'books.html';
+            })
+            .catch(error => console.error('Error adding book:', error));
+        }
+    </script>
+</body>
+</html>

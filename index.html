@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bookstore</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>Bookstore</h1>
+        <nav>
+            <ul>
+                <li><a href="home.html">Home</a></li>
+                <li><a href="books.html">Books</a></li>
+                <li><a href="add-book.html">Add Book</a></li>
+                <li><a href="search.html">Search</a></li>
+                <li><a href="#" id="logout">Logout</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <section id="home">
+            <h2>Welcome to our Bookstore</h2>
+            <p>Discover a variety of books across different genres.</p>
+        </section>
+        <section id="books">
+            <h2>Books</h2>
+            <div class="book-list">
+                <!-- Placeholder for book photos -->
+                <div class="book-item">
+                    <img src="placeholder.jpg" alt="Book Cover">
+                    <p>Book Title</p>
+                </div>
+                <!-- ...more book items... -->
+            </div>
+            <div id="inventory-images"></div> <!-- New div for inventory images -->
+        </section>
+        <section id="add-book">
+            <h2>Add a New Book</h2>
+            <form id="book-form">
+                <label for="title">Title:</label>
+                <input type="text" id="title" name="title" required>
+                <label for="author">Author:</label>
+                <input type="text" id="author" name="author" required>
+                <label for="genre">Genre:</label>
+                <input type="text" id="genre" name="genre" required>
+                <label for="cover">Cover Image URL:</label>
+                <input type="url" id="cover" name="cover" required>
+                <button type="submit">Add Book</button>
+            </form>
+        </section>
+        <section id="search">
+            <h2>Search Books</h2>
+            <input type="text" id="search-input" placeholder="Search by title, author, or genre">
+            <div id="search-results"></div>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2023 Bookstore. All rights reserved.</p>
+    </footer>
+    <script src="scripts.js"></script>
+    <script>
+        document.getElementById('logout').addEventListener('click', function() {
+            sessionStorage.removeItem('role');
+            window.location.href = 'login.html';
+        });
+
+        // Fetch and display inventory images
+        fetch('https://bookstore-api-vj13.onrender.com/inventory')
+            .then(response => response.json())
+            .then(data => {
+                const inventoryImagesDiv = document.getElementById('inventory-images');
+                data.forEach(book => {
+                    const img = document.createElement('img');
+                    img.src = book.imageUrl;
+                    img.alt = book.title;
+                    img.style.width = '100px';
+                    img.style.height = '150px';
+                    inventoryImagesDiv.appendChild(img);
+                });
+            })
+            .catch(error => console.error('Error fetching inventory:', error));
+    </script>
+</body>
+</html>

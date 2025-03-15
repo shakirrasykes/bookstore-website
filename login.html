@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Bookstore</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>Login to Bookstore</h1>
+    </header>
+    <main>
+        <section id="login">
+            <h2>Login</h2>
+            <form id="login-form" action="/login" method="POST">
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" required>
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required>
+                <input type="hidden" id="role" name="role" value="user">
+                <button type="submit">Login</button>
+            </form>
+        </section>
+        <section id="signup">
+            <h2>Sign Up</h2>
+            <form id="signup-form" action="/signup" method="POST">
+                <label for="signup-username">Username:</label>
+                <input type="text" id="signup-username" name="username" required>
+                <label for="signup-password">Password:</label>
+                <input type="password" id="signup-password" name="password" required>
+                <button type="submit">Sign Up</button>
+            </form>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2023 Bookstore. All rights reserved.</p>
+    </footer>
+    <script src="scripts.js"></script>
+    <script>
+        document.getElementById('login-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const role = document.getElementById('role').value;
+
+            fetch('/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ username, password, role })
+            })
+            .then(response => response.text())
+            .then(data => {
+                if (data === 'Login successful') {
+                    sessionStorage.setItem('role', role);
+                    window.location.href = 'user-home.html';
+                } else {
+                    alert('Invalid username or password');
+                }
+            })
+            .catch(error => console.error('Error during login:', error));
+        });
+
+        document.getElementById('signup-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const username = document.getElementById('signup-username').value;
+            const password = document.getElementById('signup-password').value;
+
+            fetch('/signup', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ username, password })
+            })
+            .then(response => response.text())
+            .then(data => {
+                if (data === 'User signed up successfully') {
+                    alert('Signup successful! Please login.');
+                } else {
+                    alert('Signup failed. Please try again.');
+                }
+            })
+            .catch(error => console.error('Error during signup:', error));
+        });
+    </script>
+</body>
+</html>

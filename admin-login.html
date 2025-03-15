@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login - Bookstore</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <main>
+        <section id="admin-login">
+            <h2>Admin Login</h2>
+            <form id="login-form">
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" required>
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required>
+                <input type="hidden" id="role" name="role" value="admin"> <!-- Hidden input for role -->
+                <button type="submit" id="login-button">Login</button>
+            </form>
+            <p id="error-message" style="color: red;"></p>
+            <a href="index.html" id="back-home-button">Back to Home</a> <!-- Added id to home link -->
+        </section>
+    </main>
+    <script src="admin-login.js"></script>
+    <script>
+        document.getElementById('login-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const role = document.getElementById('role').value;
+
+            fetch('http://localhost:3000/admin-login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ username, password, role })
+            })
+            .then(response => response.text())
+            .then(data => {
+                if (data === 'Admin login successful') {
+                    localStorage.setItem('isLoggedIn', true);
+                    window.location.href = 'admin-home.html'; // Redirect to admin home page
+                } else {
+                    document.getElementById('error-message').textContent = data;
+                }
+            })
+            .catch(error => console.error('Error during login:', error));
+        });
+    </script>
+</body>
+</html>

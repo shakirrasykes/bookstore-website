@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Books - Bookstore</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <!-- ...existing code... -->
+    </header>
+    <main>
+        <section id="books">
+            <h2>Books</h2>
+            <div class="book-list">
+                <!-- Existing book items will be replaced by API data -->
+            </div>
+            <div id="inventory-images"></div> <!-- New div for inventory images -->
+        </section>
+    </main>
+    <footer>
+        <!-- ...existing code... -->
+    </footer>
+    <script src="scripts.js"></script>
+    <script>
+        document.getElementById('logout').addEventListener('click', function() {
+            sessionStorage.removeItem('role');
+            window.location.href = 'login.html';
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            fetch('https://bookstore-api-vj13.onrender.com/inventory')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    const bookList = document.querySelector('.book-list');
+                    bookList.innerHTML = ''; // Clear existing book items
+                    data.forEach(book => {
+                        const bookItem = document.createElement('div');
+                        bookItem.classList.add('book-item');
+                        bookItem.innerHTML = `
+                            <img src="${book.imageUrl}" alt="${book.title} Cover">
+                            <p>${book.title}</p>
+                            <p><strong>Author:</strong> ${book.author}</p>
+                            <p><strong>Genre:</strong> ${book.genre}</p>
+                            <button onclick="alert('Author: ${book.author}')">Show Author</button>
+                        `;
+                        bookList.appendChild(bookItem);
+                    });
+                })
+                .catch(error => {
+                    console.error('Error fetching books:', error);
+                    document.querySelector('.book-list').innerHTML = '<p>Error fetching books. Please try again later.</p>';
+                });
+
+            // Fetch and display inventory images
+            fetch('https://bookstore-api-vj13.onrender.com/inventory')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    const inventoryImagesDiv = document.getElementById('inventory-images');
+                    data.forEach(book => {
+                        const img = document.createElement('img');
+                        img.src = book.imageUrl;
+                        img.alt = book.title;
+                        img.style.width = '100px';
+                        img.style.height = '150px';
+                        inventoryImagesDiv.appendChild(img);
+                    });
+                })
+                .catch(error => console.error('Error fetching inventory:', error));
+        });
+    </script>
+</body>
+</html>

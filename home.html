@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home - Bookstore</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>Welcome to the Bookstore</h1>
+        <nav>
+            <ul>
+                <li><a href="home.html">Home</a></li>
+                <li><a href="books.html">Books</a></li>
+                <li><a href="add-book.html">Add Book</a></li>
+                <li><a href="search.html">Search</a></li>
+                <li><a href="Customer Feedback Form.html">Feedback</a></li>
+                <li><a href="login.html" id="logout">Logout</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <section id="welcome">
+            <h2>Welcome, User!</h2>
+            <p>Explore our collection of books, add new books, search for your favorite titles, and provide feedback to help us improve.</p>
+        </section>
+        <section id="inventory">
+            <h2>Book Inventory</h2>
+            <ul id="book-list"></ul>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2023 Bookstore. All rights reserved.</p>
+    </footer>
+    <script src="scripts.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            fetch('https://bookstore-api-vj13.onrender.com/inventory')
+                .then(response => response.json())
+                .then(data => {
+                    const bookList = document.getElementById('book-list');
+                    data.forEach(book => {
+                        const listItem = document.createElement('li');
+                        listItem.textContent = `${book.title} by ${book.author}`;
+                        bookList.appendChild(listItem);
+                    });
+                })
+                .catch(error => console.error('Error fetching inventory:', error));
+        });
+    </script>
+</body>
+</html>

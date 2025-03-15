@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Automated Reorders Report</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script>
+        if (!localStorage.getItem('isLoggedIn')) {
+            window.location.href = 'admin-login.html'; // Redirect to login if not logged in
+        }
+    </script>
+  </head>
+  <body>
+    <main>
+      <div class="card">
+        <h3>Automated Reorders Report</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Manufacturer</th>
+              <th>Book Title</th>
+              <th>Quantity Ordered</th>
+              <th>Order Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Example row -->
+            <tr>
+              <td>Example Manufacturer</td>
+              <td>Example Book Title</td>
+              <td>100</td>
+              <td>2023-10-01</td>
+            </tr>
+            <!-- Add more rows as needed -->
+          </tbody>
+        </table>
+      </div>
+    </main>
+  </body>
+</html>
